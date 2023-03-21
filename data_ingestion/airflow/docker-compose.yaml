@@ -79,7 +79,7 @@ x-airflow-common:
 
     # TODO:
     GCP_PROJECT_ID: 'de-project-franklyne'
-    GCP_GCS_BUCKET: ''
+    GCP_GCS_BUCKET: 'ny_taxi_data_lake'
 
     #logins
     PG_HOST: "${PG_HOST}"
