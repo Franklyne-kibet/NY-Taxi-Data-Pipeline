@@ -39,8 +39,7 @@ def extract_data():
             done 
         done
     '''
-
-    subprocess.run(bash_script, shell=True)
+    subprocess.run(bash_script, shell=True, executable='/bin/bash')
     
 @task(name="Data Processing", log_prints=True)
 def spark_processing():
