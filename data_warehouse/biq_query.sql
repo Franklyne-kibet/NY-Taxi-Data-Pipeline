@@ -4,10 +4,9 @@ OPTIONS
 (
     format = 'parquet',
     uris = [
-        'gs://ny_taxi_data_lake/data/raw/fhv/2019/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/fhv/2020/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/fhv/2021/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/fhv/2022/*.parquet'
+        'gs://ny_taxi_data_lake/data/pq/fhv/2020/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/fhv/2021/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/fhv/2022/*.parquet'
     ]
 );
 
@@ -21,10 +20,9 @@ OPTIONS
 (
     format = 'parquet',
     uris = [
-        'gs://ny_taxi_data_lake/data/raw/yellow/2019/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/yellow/2020/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/yellow/2021/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/yellow/2022/*.parquet'
+        'gs://ny_taxi_data_lake/data/pq/yellow/2020/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/yellow/2021/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/yellow/2022/*.parquet'
     ]
 );
 
@@ -38,10 +36,9 @@ OPTIONS
 (
     format = 'parquet',
     uris = [
-        'gs://ny_taxi_data_lake/data/raw/green/2019/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/green/2020/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/green/2021/*.parquet',
-        'gs://ny_taxi_data_lake/data/raw/green/2022/*.parquet'
+        'gs://ny_taxi_data_lake/data/pq/green/2020/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/green/2021/*.parquet',
+        'gs://ny_taxi_data_lake/data/pq/green/2022/*.parquet'
     ]
 );
 
