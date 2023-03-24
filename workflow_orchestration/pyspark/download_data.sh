@@ -1,7 +1,7 @@
 set -e 
 
 TAXI_TYPES=("yellow" "green" "fhv") 
-YEARS=("2019" "2020" "2021" "2022") 
+YEARS=("2020" "2021" "2022") 
 URL_PREFIX="https://d37ci6vzurychx.cloudfront.net/trip-data" 
 
 for TAXI_TYPE in "${TAXI_TYPES[@]}"; do 
@@ -12,17 +12,17 @@ for TAXI_TYPE in "${TAXI_TYPES[@]}"; do
       LOCAL_PREFIX="data/raw/${TAXI_TYPE}/${YEAR}/${FMONTH}" 
       LOCAL_FILE="${TAXI_TYPE}_tripdata_${YEAR}_${FMONTH}.parquet" 
       LOCAL_PATH="${LOCAL_PREFIX}/${LOCAL_FILE}" 
-      CSV_FILE="${TAXI_TYPE}_tripdata_${YEAR}_${FMONTH}.csv"
-      
+      CSV_FILE="${TAXI_TYPE}_tripdata_${YEAR}_${FMONTH}.csv" 
+
       echo "downloading ${URL} to ${LOCAL_PATH}" 
       mkdir -p ${LOCAL_PREFIX} 
       wget ${URL} -O ${LOCAL_PATH} 
-      
+
       echo "converting ${LOCAL_PATH} to CSV format" 
-      parquet-tools csv ${LOCAL_PATH} | csvformat -T > ${LOCAL_PREFIX}/${CSV_FILE}
-      
+      python -c "import pandas as pd; df = pd.read_parquet('${LOCAL_PATH}'); df.to_csv('${LOCAL_PREFIX}/${CSV_FILE}', index=False, columns=df.columns)" 
+
       echo "removing ${LOCAL_PATH}" 
-      rm ${LOCAL_PATH}
+      rm ${LOCAL_PATH} 
     done 
   done 
 done

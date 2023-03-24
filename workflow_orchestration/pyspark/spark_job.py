@@ -1,3 +1,4 @@
+import os
 import pyspark
 import itertools
 from pyspark.sql import SparkSession
@@ -19,10 +20,10 @@ yellow_schema = types.StructType([
         types.StructField('mta_tax', types.DoubleType(), True), 
         types.StructField('tip_amount', types.DoubleType(), True), 
         types.StructField('tolls_amount', types.DoubleType(), True),
-        types.StructField('ehail_fee', types.DoubleType(), True),
         types.StructField('improvement_surcharge', types.DoubleType(), True), 
         types.StructField('total_amount', types.DoubleType(), True), 
-        types.StructField('congestion_surcharge', types.DoubleType(), True)
+        types.StructField('congestion_surcharge', types.DoubleType(), True),
+        types.StructField('airport_fee', types.DoubleType(), True),
 ])
 
 green_schema = types.StructType([
@@ -59,56 +60,61 @@ fhv_schema = types.StructType([
 ])
 
 
-
 def spark_submit():
     spark = SparkSession.builder \
         .appName('test') \
         .getOrCreate()
 
-    taxi_types = ("yellow", "green", "fhv")
-    years = ("2019", "2020", "2021", "2022")
-
-    for yellow, year, month in itertools.product(taxi_types, years, range(1, 13)):
-                print(f"processing data for {year}/{month} ({yellow})")
-                
-                input_path = f"data/raw/{yellow}/{year}/{month:02d}/"
-                output_path = f"data/pq/{yellow}/{year}/{month:02d}/"
-                
-                df_taxi = spark.read \
-                    .option("header", "true") \
-                    .schema(yellow_schema) \
-                    .csv(input_path)
-                    
-                df_taxi \
-                    .repartition(4) \
-                    .write.parquet(output_path, mode="overwrite")
-                    
-    for green, year, month in itertools.product(taxi_types, years, range(1, 13)):
-                print(f"processing data for {year}/{month} ({green})")
-                
-                input_path = f"data/raw/{green}/{year}/{month:02d}/"
-                output_path = f"data/pq/{green}/{year}/{month:02d}/"
-                
-                df_green = spark.read \
-                    .option("header", "true") \
-                    .schema(green_schema) \
-                    .csv(input_path)
-                    
-                df_green \
-                    .repartition(4) \
-                    .write.parquet(output_path, mode="overwrite")
-
-    for fhv, year, month in itertools.product(taxi_types, years, range(1, 13)):
-                print(f"processing data for {year}/{month} ({green})")
-                input_path = f"data/raw/{fhv}/{year}/{month:02d}/"
-                output_path = f"data/pq/{fhv}/{year}/{month:02d}/"
-                
-                df_fhv = spark.read \
-                    .option("header", "true") \
-                    .schema(fhv_schema) \
-                    .csv(input_path)
-                    
-                df_fhv \
-                    .repartition(4) \
-                    .write.parquet(output_path, mode="overwrite")
+    years = ("2020", "2021", "2022")
+    for year, month in itertools.product(years, range(1, 13)):
+        print(f"processing data for {year}/{month}")
+        
+        # Process yellow taxi data
+        yellow_input_path = f"data/raw/yellow/{year}/{month:02d}/"
+        yellow_output_path = f"data/pq/yellow/{year}/{month:02d}/"
+        
+        if os.path.exists(yellow_input_path):
+            print(f"processing data for {year}/{month} (yellow)")
+            df_yellow = spark.read \
+                .option("header", "true") \
+                .schema(yellow_schema) \
+                .csv(yellow_input_path)
+            df_yellow \
+                .repartition(1) \
+                .write.parquet(yellow_output_path, mode="overwrite")
+        else:
+            print(f"No input data found for {year}/{month} (yellow)")
+        
+        # Process green taxi data
+        green_input_path = f"data/raw/green/{year}/{month:02d}/"
+        green_output_path = f"data/pq/green/{year}/{month:02d}/"
+        
+        if os.path.exists(green_input_path):
+            print(f"processing data for {year}/{month} (green)")
+            df_green = spark.read \
+                .option("header", "true") \
+                .schema(green_schema) \
+                .csv(green_input_path)
+            df_green \
+                .repartition(1) \
+                .write.parquet(green_output_path, mode="overwrite")
+        else:
+            print(f"No input data found for {year}/{month} (green)")
+        
+        # Process fhv taxi data
+        fhv_input_path = f"data/raw/fhv/{year}/{month:02d}/"
+        fhv_output_path = f"data/pq/fhv/{year}/{month:02d}/"
+        
+        if os.path.exists(fhv_input_path):
+            print(f"processing data for {year}/{month} (yellow)")
+            df_fhv = spark.read \
+                .option("header", "true") \
+                .schema(fhv_schema) \
+                .csv(fhv_input_path)
+            df_fhv \
+                .repartition(1) \
+                .write.parquet(fhv_output_path, mode="overwrite")
+        else:
+            print(f"No input data found for {year}/{month} (fhv)")
+        
 spark_submit()
